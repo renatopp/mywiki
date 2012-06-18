@@ -4,6 +4,7 @@ My Personal Wiki
 
 My Personal Wiki using static reStructureText and Markdown files
 
+.. image:: https://github.com/renatopp/mywiki/raw/master/static/img/sample-list.png
 
 
 Dependencies
