@@ -1,0 +1,26 @@
+{# BREADCRUMB #}
+<div class="crumb">
+    <ul>
+        {# HOME #}
+        {% if internal is defined and internal %}
+            <li><a href="{{url_for('list')}}"><i class="icon-cog"></i>Settings</a></li>
+        {% else %}
+            <li><a href="{{url_for('list')}}"><i class="icon-home"></i>Home</a></li>
+        {% endif %}
+
+        {# MIDDLE TERMS #}
+        {% for c in resource.crumbs[:-1] %}
+            <li> &gt; <a href="{{url_for('list', path=c)}}">{{c.split('/')|last|title}}</a></li>
+        {% endfor %}
+
+        {# LAST TERM (ACTIVE) #}
+        {% if resource.crumbs|count != 0 %}
+            {% if resource.is_file() %}
+                <li> &gt; {{resource.cur_file}}</li>
+            {% else %}
+                <li> &gt; {{resource.cur_dir|title}}</li>
+            {% endif %}
+        {% endif %}
+    </ul>
+</div>
+{# ========== #}

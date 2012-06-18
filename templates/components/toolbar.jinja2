@@ -1,0 +1,7 @@
+{% macro item(title, icon, js_function) -%}
+    <a href="#" onclick="{{js_function}};" class="btn btn-mini"><i class="icon-{{icon}}"></i> {{title}}</a>
+{%- endmacro %}
+
+{% macro link(title, icon, href) -%}
+    <a href="{{href}}" class="btn btn-mini"><i class="icon-{{icon}}"></i> {{title}}</a>
+{%- endmacro %}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <title>{% block title %}My Wiki{% endblock %}</title>
+  {{'normalize.css'|css}}
+  {{'bootstrap.min.css'|css}}
+  {{'font-awesome.css'|css}}
+  {{'wiki.css'|css}}
+  {{'jquery-1.7.2.min.js'|js}}
+  {{'bootstrap.min.js'|js}}
+  {{'wiki.js'|js}}
+
+  <link rel="icon" 
+      type="image/png" 
+      href="{{'favicon.png'|static}}">
+  {% block head %} {% endblock %}
+
+  <script>
+    $(document).ready(function () {
+      pretty();
+      initjs();
+    });
+  </script>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner ">
+    <div class="container">
+      <a class="brand" href="{{url_for('index')}}">My Personal Wiki</a>
+      <ul class="nav">
+        <!-- <li><a href="#">Link</a></li> -->
+      </ul>
+      <ul class="nav pull-right">
+        {% if resource is defined %}
+          <li><a href="{{url_for('edit', path=resource.path)}}?f=config"><i class="icon-cog"></i> Settings</a></li>
+        {% else %}
+          <li><a href="{{url_for('index')}}?f=config"><i class="icon-cog"></i> Settings</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      {% block body %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

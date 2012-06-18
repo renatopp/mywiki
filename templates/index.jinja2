@@ -1,0 +1,81 @@
+{% extends "layout.jinja2" %}
+
+{% block title %}My Wiki - {{resource.cur_dir|title}}{% endblock %}
+
+{% block body %}
+
+{% include 'components/crumb.jinja2' %}
+{% import 'components/toolbar.jinja2' as toolbar %}
+
+<table id="table-list" class="table table-striped">
+    <thead>
+        <tr class="toolbar">
+            <th>
+                {# TITLE #}
+                <h3><i class="icon-folder-open"></i> {{resource.cur_dir|title}}</h3>
+                <a href="{{url_for('list', path=resource.path)}}"><i class="icon-link"></i></a>
+                {# ===== #}
+
+                <div class="btn-toolbar pull-right">
+                    <div class="btn-group">
+                        {{toolbar.item('Refresh', 'refresh', 'refresh()')}}
+                    </div>
+
+                    <div class="btn-group">
+                        {{toolbar.item('New Folder', 'folder-close', 'create_folder()')}}
+                        {{toolbar.item('New Document', 'file', 'create_file()')}}
+                    </div>
+
+                    <div class="btn-group">
+                        {{toolbar.item('View in Explorer', 'external-link', 'open_folder()')}}
+                    </div>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {# RETURN #}
+        {% if not resource.is_base() %}
+        <tr>
+            <td><a href="{{url_for('list', path=resource.join('..'))}}"><i class="icon-folder-close"></i> ..</a></td>
+        </tr>
+        {% endif %}
+        {# ====== #}
+
+        {# DIRECTORIES #}
+        {% for d in resource.get_dirs() %}
+        <tr data-id="d-{{loop.index}}">
+            <td>
+                <a href="{{url_for('list', path=resource.join(d))}}"><i class="icon-folder-close"></i> {{d|title}}</a>
+
+                <span class="pull-right item-operation" style="display:none" data-id="d-{{loop.index}}">
+                    <a href="#" onclick="rename_folder('{{d}}');" class="btn btn-mini"><i class="icon-pencil"></i></a>
+                    <a href="#" onclick="remove_folder('{{d}}');" class="btn btn-mini"><i class="icon-trash"></i></a>
+                </span>
+
+            </td>
+        </tr>
+        {% endfor %}
+        {# =========== #}
+
+        {# FILES #}
+        {% for f in resource.get_files() %}
+        <tr data-id="f-{{loop.index}}">
+            <td>
+                <a href="{{url_for('view', path=resource.join(f))}}"><i class="icon-file"></i> {{f}}</a>
+
+                <span class="pull-right item-operation" style="display:none" data-id="f-{{loop.index}}">
+                    <a href="#" onclick="rename_file('{{f}}');" class="btn btn-mini"><i class="icon-pencil"></i></a>
+                    <a href="#" onclick="remove_file('{{f}}');" class="btn btn-mini"><i class="icon-trash"></i></a>
+                </span>
+
+            </tr>
+        </td>
+        {% endfor %}
+        {# ===== #}
+    </tbody>
+</table>
+
+<input id="resource_path" type="hidden" value="{{resource.path}}">
+
+{% endblock %}
