@@ -1,6 +1,6 @@
 import os
-import db
-import markup
+from lib import markup
+from lib import db
 import flask
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash, jsonify
@@ -10,7 +10,6 @@ DEBUG = True
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-
 
 #==============================================================================
 # VIEWS
@@ -71,7 +70,13 @@ def edit(path):
 
     if request.form:
         db.save_file(resource.os_path, request.form['content'])
-        return flask.redirect(url_for('view', path=resource.path))
+        if internal:
+            if return_resource.is_file():
+                return flask.redirect(url_for('view', path=return_resource.path))
+            else:
+                return flask.redirect(url_for('list', path=return_resource.path))
+        else:
+            return flask.redirect(url_for('view', path=resource.path))
 
     content = db.load_file(resource.os_path)
     return render_template('edit.jinja2',
@@ -256,21 +261,6 @@ def _open_folder():
 #==============================================================================
 # UTILS
 #==============================================================================
-
-
-def make_cumbs(path):
-    cumbs = [
-        ('home', flask.url_for('list'))
-    ]
-    ac = ''
-    for p in path.strip(' \\/').split('/'):
-        if p:
-            name = p
-            ac = '/'.join([ac, p]).strip('/')
-            link = flask.url_for('list', path=ac)
-            cumbs.append((name, link))
-
-    return cumbs
 
 @app.template_filter('css')
 def css(s):

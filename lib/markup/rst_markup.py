@@ -1,4 +1,4 @@
-from markup.base_markup import Markup
+from lib.markup.base_markup import Markup
 
 class RstMarkup(Markup):
     """

@@ -3,17 +3,18 @@ import json
 import os
 
 CONFIG = 'config.json'
+BASE_PATH = os.path.join(os.path.dirname(__file__), '..')
 
 def _(path):
     return path.replace('/', os.path.sep)
 
 def load_config():
-    content = load_file(CONFIG)
+    content = load_file(os.path.join(BASE_PATH, CONFIG))
     return json.loads(content)
 
 def save_config(dict):
     content = json.dumps(dict)
-    save_file(CONFIG, content)
+    save_file(os.path.join(BASE_PATH, CONFIG), content)
 
 def load_file(file_path):
     file_ = codecs.open(_(file_path), 'r', 'utf-8')
@@ -31,7 +32,7 @@ def save_file(file_path, content):
 class Resource(object):
     def __init__(self, base_path=None, move_path=None):
         if base_path is None:
-            base_path = os.path.dirname(__file__)
+            base_path = BASE_PATH
 
         self.__base_path = self.__split(base_path)
         self.__full_path = self.__base_path[:]
@@ -143,23 +144,9 @@ class Resource(object):
     def __split(self, path):
         return path.replace('\\', '/').strip('/').split('/')
 
+    def __str__(self):
+        return '<Resource "%s">'%self.path
+    __repr__ = __str__
+
 if __name__ == '__main__':
-    path = '/dir 1/New Folder/a'
-    # path = None
-    resource = Resource('C:\\Users\\Renato\\Desktop\\wiki\\src', path)
-    # resource.move('/../../3.rst')
-    print '_Resource__path      :', resource._Resource__path
-    print '_Resource__base_path :', resource._Resource__base_path
-    print '_Resource__full_path :', resource._Resource__full_path
-    print 'path                 :', resource.path
-    print 'os_path              :', resource.os_path
-    print 'cur_dir              :', resource.cur_dir
-    print 'cur_file             :', resource.cur_file
-    print 'is_base()            :', resource.is_base()
-    print 'is_dir()             :', resource.is_dir()
-    print 'is_file()            :', resource.is_file()
-    print 'get_dirs()           :', resource.get_dirs()
-    print 'get_files()          :', resource.get_files()
-    print 'join                 :', resource.join('_____')
-    print 'os_join              :', resource.os_join('_____')
-    print 'crumbs               :', resource.crumbs
+    print os.path.dirname(__file__)
